@@ -1,8 +1,6 @@
 ## Pages
 
-```
 https://guhcalm.github.io/three-graces-in-react/dist
-```
 
 ## Folder Structure
 

@@ -1,6 +1,6 @@
 ## Pages
 
-https://guhcalm.github.io/three-graces-in-react/dist
+animated-gecko-5e35a8.netlify.app
 
 ## Folder Structure
 

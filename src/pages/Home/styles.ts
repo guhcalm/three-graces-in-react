@@ -11,6 +11,7 @@ export default styled.section`
 `
 
 export const Navbar = styled.nav`
+  z-index: 2;
   & > ul {
     display: flex;
     align-items: center;

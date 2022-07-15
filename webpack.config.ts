@@ -21,7 +21,7 @@ export default ({ WEBPACK_BUILD }) => ({
         mode: "production",
         output: {
           assetModuleFilename: "assets/[name].[contenthash][ext][query]",
-          filename: "assets/[name].[contenthash].js",
+          filename: "[name].[contenthash].js",
           clean: true
         },
         optimization: {

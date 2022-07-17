@@ -1,13 +1,6 @@
-import { FC, Suspense, useEffect, useMemo, useRef, useState } from "react"
+import { FC, Suspense, useEffect, useRef, useState } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import {
-  sRGBEncoding,
-  ACESFilmicToneMapping,
-  Group,
-  Vector3,
-  DataTexture3D
-} from "three"
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import { sRGBEncoding, ACESFilmicToneMapping, Group, Vector3, Fog } from "three"
 import { useLoadModel } from "../../hooks"
 
 const Graces = {
@@ -99,15 +92,16 @@ const Model = ({ data }) => {
 }
 
 const Scene = ({ data }) => {
-  const { camera, gl } = useThree()
+  const { scene, camera, gl } = useThree()
   useEffect(() => {
-    new OrbitControls(camera, gl.domElement).update()
     camera.near = 0
     gl.outputEncoding = sRGBEncoding
     gl.toneMapping = ACESFilmicToneMapping
     gl.toneMappingExposure = 1
     gl.setPixelRatio(devicePixelRatio)
     gl.shadowMap.enabled = true
+
+    scene.fog = new Fog("black", 0, 10)
   }, [])
   return <Model data={data} />
 }

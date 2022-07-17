@@ -21,8 +21,7 @@ export default ({ WEBPACK_BUILD }) => ({
         mode: "production",
         output: {
           assetModuleFilename: "assets/[name].[contenthash][ext][query]",
-          filename: "[name].[contenthash].js",
-          clean: true
+          filename: "[name].[contenthash].js"
         },
         optimization: {
           splitChunks: {

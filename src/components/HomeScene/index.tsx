@@ -6,9 +6,9 @@ import {
   Mesh,
   ACESFilmicToneMapping,
   BackSide,
-  Group
+  Group,
+  Fog
 } from "three"
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { useLoadModel } from "../../hooks"
 
 const sceneMaterial = new MeshStandardMaterial({
@@ -37,10 +37,10 @@ const Model = () => {
       </group>
       <pointLight
         ref={lightRef}
-        args={["white", 1, 20, 30]}
+        args={["white", 2, 20, 30]}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
       />
       <mesh material={sceneMaterial}>
         <sphereGeometry args={[1.2]} />
@@ -52,7 +52,6 @@ const Model = () => {
 const Scene = () => {
   const { scene, camera, gl } = useThree()
   useEffect(() => {
-    new OrbitControls(camera, gl.domElement).update()
     camera.position.set(0, 0, 5)
     camera.lookAt(0, 0, 0)
     gl.outputEncoding = sRGBEncoding
@@ -60,6 +59,7 @@ const Scene = () => {
     gl.toneMappingExposure = 1
     gl.setPixelRatio(devicePixelRatio)
     gl.shadowMap.enabled = true
+    scene.fog = new Fog("black", 0, 10)
   }, [])
   return <Model />
 }

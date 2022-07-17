@@ -26,7 +26,7 @@ const Model = () => {
     raycaster.setFromCamera(mouse, camera)
     const { direction } = raycaster.ray
     const path = direction
-      .multiplyScalar(Math.min(2 * Math.abs(mouse.x) + 4, 5.5))
+      .multiplyScalar(Math.min(Math.abs(mouse.x) + Math.abs(mouse.y) + 4, 5.5))
       .add(camera.position)
     lightRef.current?.position.lerp(path, 0.2)
   })
@@ -37,7 +37,7 @@ const Model = () => {
       </group>
       <pointLight
         ref={lightRef}
-        args={["white", 2, 20, 30]}
+        args={["white", 3, 20, 40]}
         castShadow
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}

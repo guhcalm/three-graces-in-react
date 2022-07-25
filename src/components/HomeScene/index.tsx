@@ -35,13 +35,7 @@ const Model = () => {
       <group ref={modelRef} scale={0.12}>
         <primitive object={model} scale=".1" position={[-3.5, -10.5, 0]} />
       </group>
-      <pointLight
-        ref={lightRef}
-        args={["white", 3, 20, 40]}
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-      />
+      <pointLight ref={lightRef} args={["white", 3, 20, 40]} castShadow />
       <mesh material={sceneMaterial}>
         <sphereGeometry args={[1.2]} />
       </mesh>
@@ -54,10 +48,12 @@ const Scene = () => {
   useEffect(() => {
     camera.position.set(0, 0, 5)
     camera.lookAt(0, 0, 0)
+    camera.near = 2
+    camera.far = 15
     gl.outputEncoding = sRGBEncoding
     gl.toneMapping = ACESFilmicToneMapping
     gl.toneMappingExposure = 1
-    gl.setPixelRatio(devicePixelRatio)
+    gl.setPixelRatio(Math.min(devicePixelRatio, 2) * 0.9)
     gl.shadowMap.enabled = true
     scene.fog = new Fog("black", 0, 10)
   }, [])
@@ -66,7 +62,10 @@ const Scene = () => {
 
 export default (() => (
   <Suspense>
-    <Canvas gl={{ antialias: true }} camera={{ fov: 10 }}>
+    <Canvas
+      gl={{ antialias: true, powerPreference: "high-performance" }}
+      camera={{ fov: 10 }}
+    >
       <Scene />
     </Canvas>
   </Suspense>

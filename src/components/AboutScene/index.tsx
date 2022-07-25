@@ -77,16 +77,8 @@ const Model = ({ data }) => {
         args={["white", 2, 30, 30]}
         position={[0, 0, -2]}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
       />
-      <pointLight
-        position={[-5, 0, 1]}
-        decay={20}
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-      />
+      <pointLight position={[-5, 0, 1]} decay={20} castShadow />
     </>
   )
 }
@@ -95,12 +87,12 @@ const Scene = ({ data }) => {
   const { scene, camera, gl } = useThree()
   useEffect(() => {
     camera.near = 0
+    camera.far = 5
     gl.outputEncoding = sRGBEncoding
     gl.toneMapping = ACESFilmicToneMapping
     gl.toneMappingExposure = 1
-    gl.setPixelRatio(devicePixelRatio)
+    gl.setPixelRatio(Math.min(devicePixelRatio, 2) * 0.9)
     gl.shadowMap.enabled = true
-
     scene.fog = new Fog("black", 0, 10)
   }, [])
   return <Model data={data} />
@@ -108,7 +100,7 @@ const Scene = ({ data }) => {
 
 export default (({ data }) => (
   <Suspense>
-    <Canvas gl={{ antialias: true }}>
+    <Canvas gl={{ antialias: true, powerPreference: "high-performance" }}>
       <Scene data={data} />
     </Canvas>
   </Suspense>

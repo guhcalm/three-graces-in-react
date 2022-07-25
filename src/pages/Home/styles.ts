@@ -43,9 +43,9 @@ export const Navbar = styled.nav`
     overflow: hidden;
     height: 24px;
     width: 15px;
-    border-left: 6px solid white;
-    border-right: 6px solid white;
-    border-radius: 5px;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    border-radius: 50%;
     align-self: flex-end;
     margin-top: 15px;
     margin-right: 15px;
@@ -61,6 +61,7 @@ export const Navbar = styled.nav`
       min-height: 100vh;
       transition: 0.5s;
       background-color: white;
+      border-radius: 5px;
       & > ul {
         flex-direction: column;
         justify-content: center;

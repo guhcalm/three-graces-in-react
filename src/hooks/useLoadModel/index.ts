@@ -15,6 +15,7 @@ export default () => {
       .load("./assets/model/scene.gltf", ({ scene }) => {
         scene.traverse(object => {
           if (!(object instanceof Mesh)) return
+          object.matrixAutoUpdate = false
           object.castShadow = false
           object.receiveShadow = false
           object.material.dispose()

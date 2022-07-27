@@ -1,5 +1,6 @@
 import { FC } from "react"
 import { HomeScene } from "../../components"
+import { useCustomContext } from "../../hooks"
 import Container, { Navbar, Info, Canvas } from "./styles"
 
 const data = {
@@ -14,24 +15,22 @@ const data = {
     the gods.`
 }
 
-export default (() => {
-  return (
-    <Container>
-      <Canvas>
-        <HomeScene />
-      </Canvas>
-      <Navbar>
-        <ul>
-          {data.nav.map(page => (
-            <li className={page}>{page}</li>
-          ))}
-        </ul>
-      </Navbar>
-      <Info>
-        <h2>{data.title[0]}</h2>
-        <h1>{data.title[1]}</h1>
-        <p>{data.info}</p>
-      </Info>
-    </Container>
-  )
-}) as FC
+export default () => (
+  <Container>
+    <Canvas>
+      <HomeScene />
+    </Canvas>
+    <Navbar>
+      <ul>
+        {data.nav.map(page => (
+          <li className={page}>{page}</li>
+        ))}
+      </ul>
+    </Navbar>
+    <Info>
+      <h2>{data.title[0]}</h2>
+      <h1>{data.title[1]}</h1>
+      <p>{data.info}</p>
+    </Info>
+  </Container>
+)

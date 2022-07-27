@@ -1,7 +1,8 @@
-import { FC, Suspense, useEffect, useRef, useState } from "react"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { sRGBEncoding, ACESFilmicToneMapping, Group, Vector3, Fog } from "three"
-import { useLoadModel } from "../../hooks"
+import { useEffect, useState } from "react"
+import { Canvas, useFrame } from "@react-three/fiber"
+import { Vector3 } from "three"
+import { useCustomContext, useSetupScene } from "../../hooks"
+import { BridgeProvider, useBridgeContext } from "../../context"
 
 const Graces = {
   Aglaea: {
@@ -42,36 +43,29 @@ const Graces = {
   }
 }
 
-const Model = ({ data }) => {
-  const { model } = useLoadModel()
-  const modelRef = useRef<Group>()
+const Model = () => {
+  const { state } = useBridgeContext()
+  const { model, grace } = state
   const [path, setPath] = useState({
-    current: { camera: new Vector3(0, 0, 5), lookAt: new Vector3() },
-    target: Graces.Euphere
+    current: { camera: new Vector3(), lookAt: new Vector3() },
+    target: Graces.Aglaea
   })
-  useEffect(() => {
-    setPath(current => ({ ...current, target: Graces[data] }))
-  }, [data])
-  useFrame(({ camera }) => {
-    setPath(current => {
-      if (JSON.stringify(current.current) === JSON.stringify(current.target))
-        return current
-      current.current.camera.lerp(current.target.camera, 0.05)
-      current.current.lookAt.lerp(current.target.lookAt, 0.05)
-      return current
+  useEffect(() => setPath(hid => ({ ...hid, target: Graces[grace] })), [grace])
+  useFrame(({ camera }) =>
+    setPath(hid => {
+      if (JSON.stringify(hid.current) === JSON.stringify(hid.target)) return hid
+      const { current, target } = hid
+      current.camera.lerp(target.camera, 0.05)
+      current.lookAt.lerp(target.lookAt, 0.05)
+      camera.position.copy(current.camera)
+      camera.lookAt(current.lookAt)
+      return hid
     })
-    camera.position.copy(path.current.camera)
-    camera.lookAt(path.current.lookAt)
-  })
+  )
   return (
     <>
-      <group ref={modelRef} scale={1.5}>
-        <primitive
-          object={model}
-          scale=".1"
-          position={[-3.5, -10.5, 0]}
-          name="model"
-        />
+      <group scale={1.5}>
+        <primitive object={model.clone()} name="model" />
       </group>
       <pointLight
         args={["white", 2, 30, 30]}
@@ -83,25 +77,15 @@ const Model = ({ data }) => {
   )
 }
 
-const Scene = ({ data }) => {
-  const { scene, camera, gl } = useThree()
-  useEffect(() => {
-    camera.near = 0
-    camera.far = 5
-    gl.outputEncoding = sRGBEncoding
-    gl.toneMapping = ACESFilmicToneMapping
-    gl.toneMappingExposure = 1
-    gl.setPixelRatio(Math.min(devicePixelRatio, 2) * 0.9)
-    gl.shadowMap.enabled = true
-    scene.fog = new Fog("black", 0, 10)
-  }, [])
-  return <Model data={data} />
+const Scene = () => {
+  useSetupScene()
+  return <Model />
 }
 
-export default (({ data }) => (
-  <Suspense>
-    <Canvas gl={{ antialias: true, powerPreference: "high-performance" }}>
-      <Scene data={data} />
-    </Canvas>
-  </Suspense>
-)) as FC
+export default () => (
+  <Canvas gl={{ antialias: true, powerPreference: "high-performance" }}>
+    <BridgeProvider value={useCustomContext()}>
+      <Scene />
+    </BridgeProvider>
+  </Canvas>
+)

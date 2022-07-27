@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react"
-import { Group, Mesh, MeshStandardMaterial } from "three"
+import { useEffect } from "react"
+import { Mesh, MeshStandardMaterial } from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader"
+import { useCustomContext } from ".."
 
 export default () => {
-  const [ThreeGraces, setThreeGraces] = useState(new Group())
+  const { dispatch, actions } = useCustomContext()
   useEffect(() => {
     new GLTFLoader()
       .setDRACOLoader(
         new DRACOLoader()
-          .setDecoderPath("/examples/js/libs/draco/")
+          .setDecoderPath("https://www.gstatic.com/draco/v1/decoders/")
           .setDecoderConfig({ type: "js" })
       )
       .load("./assets/model/scene.gltf", ({ scene }) => {
@@ -25,8 +26,9 @@ export default () => {
             metalness: 0
           })
         })
-        setThreeGraces(scene)
+        scene.scale.set(0.1, 0.1, 0.1)
+        scene.position.set(-3.5, -10.5, 0)
+        dispatch(actions.loadModel(scene))
       })
   }, [])
-  return { model: ThreeGraces }
 }

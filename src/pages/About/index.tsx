@@ -1,5 +1,5 @@
-import { FC, useState } from "react"
 import { AboutScene } from "../../components"
+import { useCustomContext } from "../../hooks"
 import Container, { Info, ReadMore } from "./styles"
 
 const data = {
@@ -10,32 +10,31 @@ const data = {
   }
 }
 
-export default (() => {
-  const [current, setCurrent] = useState("Aglaea")
-  const onClick = ({ target }) => setCurrent(target.id)
+export default () => {
+  const { state, dispatch, actions } = useCustomContext()
+  const { grace } = state
+  const onClick = ({ target }) => dispatch(actions.setGrace(target.id))
   return (
     <Container>
       <Info>
-        <ul className={current}>
+        <ul className={grace}>
           {Object.entries(data.graces).map(([name]) => (
             <li
               key={name}
               id={name}
               onClick={onClick}
-              className={current === name ? "active" : ""}
+              className={grace === name ? "active" : ""}
             >
               {name}
             </li>
           ))}
         </ul>
-        <p>{data.graces[current]}</p>
+        <p>{data.graces[grace]}</p>
         <ReadMore type="button">READ MORE</ReadMore>
       </Info>
       <div>
-        <AboutScene data={current} />
-        {/*
-         */}
+        <AboutScene />
       </div>
     </Container>
   )
-}) as FC
+}

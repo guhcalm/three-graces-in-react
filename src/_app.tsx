@@ -1,9 +1,13 @@
-import { Layout, AboutScene } from "./components"
+import { Layout } from "./components"
+import { useLoadModel } from "./hooks"
 import { Home, About } from "./pages"
 
-export const MyApp = () => (
-  <Layout>
-    <Home />
-    <About />
-  </Layout>
-)
+export const MyApp = () => {
+  useLoadModel()
+  return (
+    <Layout>
+      <Home />
+      <About />
+    </Layout>
+  )
+}

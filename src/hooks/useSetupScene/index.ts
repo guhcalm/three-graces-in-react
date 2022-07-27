@@ -7,7 +7,7 @@ export default () => {
   useEffect(() => {
     camera.position.set(0, 0, 5)
     camera.lookAt(0, 0, 0)
-    camera.near = 2
+    camera.near = 0
     camera.far = 15
     gl.outputEncoding = sRGBEncoding
     gl.toneMapping = ACESFilmicToneMapping

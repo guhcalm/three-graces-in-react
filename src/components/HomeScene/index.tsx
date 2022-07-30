@@ -28,7 +28,7 @@ const Model = () => {
       </group>
       <pointLight
         ref={lightRef}
-        args={["white", 2, 20, 40]}
+        args={["white", 1, 20, 40]}
         castShadow
         position={[10, 5, 2]}
       />

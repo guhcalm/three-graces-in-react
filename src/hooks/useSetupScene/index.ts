@@ -11,7 +11,7 @@ export default () => {
     camera.far = 15
     gl.outputEncoding = sRGBEncoding
     gl.toneMapping = ACESFilmicToneMapping
-    gl.toneMappingExposure = 1
+    gl.toneMappingExposure = 1.5
     gl.setPixelRatio(Math.min(devicePixelRatio, 2) * 0.9)
     gl.shadowMap.enabled = true
   }, [])

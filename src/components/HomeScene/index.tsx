@@ -1,18 +1,13 @@
 import { useRef } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { MeshStandardMaterial, Mesh, BackSide } from "three"
-import { useCustomContext, useSetupScene } from "../../hooks"
-import { BridgeProvider, useBridgeContext } from "../../context"
-
-const sceneMaterial = new MeshStandardMaterial({
-  color: "rgb(0,0,2)",
-  roughness: 0.5,
-  metalness: 0,
-  side: BackSide
-})
+import { Mesh, BackSide, Color } from "three"
+import {
+  BridgeProvider,
+  useBridgeContext,
+  useLoadtGracesContext
+} from "../../context"
 
 const Model = () => {
-  const { model } = useBridgeContext().state
   const lightRef = useRef<Mesh>(null!)
   useFrame(({ raycaster, mouse, camera }) => {
     raycaster.setFromCamera(mouse, camera)
@@ -22,35 +17,45 @@ const Model = () => {
     lightRef.current?.position.lerp(path, 0.05)
   })
   return (
-    <>
+    <group>
       <group scale={0.12}>
-        <primitive object={model.clone()} />
+        <primitive object={useBridgeContext().state.model.clone()} />
       </group>
-      <pointLight
-        ref={lightRef}
-        args={["white", 1, 20, 40]}
-        castShadow
-        position={[10, 5, 2]}
-      />
-      <mesh material={sceneMaterial}>
+      <pointLight ref={lightRef} args={["white", 1, 20, 40]} castShadow />
+      <mesh>
         <sphereGeometry args={[1.2]} />
+        <meshStandardMaterial
+          color="rgb(0,0,2)"
+          roughness={0.5}
+          metalness={0}
+          side={BackSide}
+        />
       </mesh>
-    </>
+    </group>
   )
-}
-
-const Scene = () => {
-  useSetupScene()
-  return <Model />
 }
 
 export default () => (
   <Canvas
-    gl={{ antialias: true, powerPreference: "high-performance" }}
+    gl={{
+      antialias: false,
+      powerPreference: "high-performance",
+      stencil: false,
+      logarithmicDepthBuffer: true,
+      alpha: false
+    }}
     camera={{ fov: 10 }}
+    onCreated={({ camera, gl, scene }) => {
+      camera.position.set(0, 0, 5)
+      camera.lookAt(0, 0, 0)
+      camera.near = 0.1
+      camera.far = 15
+      gl.setPixelRatio(Math.min(devicePixelRatio, 2) * 0.9)
+      scene.background = new Color("rgb(2,2,2)")
+    }}
   >
-    <BridgeProvider value={useCustomContext()}>
-      <Scene />
+    <BridgeProvider value={useLoadtGracesContext()}>
+      <Model />
     </BridgeProvider>
   </Canvas>
 )

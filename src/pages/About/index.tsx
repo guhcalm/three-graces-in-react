@@ -1,5 +1,5 @@
 import { AboutScene } from "../../components"
-import { useCustomContext } from "../../hooks"
+import { useLoadtGracesContext } from "../../context"
 import Container, { Info, ReadMore } from "./styles"
 
 const data = {
@@ -11,7 +11,7 @@ const data = {
 }
 
 export default () => {
-  const { state, dispatch, actions } = useCustomContext()
+  const { state, dispatch, actions } = useLoadtGracesContext()
   const { grace } = state
   const onClick = ({ target }) => dispatch(actions.setGrace(target.id))
   return (

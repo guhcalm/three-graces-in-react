@@ -1,11 +1,11 @@
 import { useEffect } from "react"
-import { Mesh, MeshLambertMaterial, MeshStandardMaterial } from "three"
+import { Mesh, MeshStandardMaterial } from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader"
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader"
-import { useCustomContext } from ".."
+import { useLoadtGracesContext } from "../../context"
 
 export default () => {
-  const { dispatch, actions } = useCustomContext()
+  const { dispatch, actions } = useLoadtGracesContext()
   useEffect(() => {
     new GLTFLoader()
       .setDRACOLoader(
@@ -22,7 +22,7 @@ export default () => {
           object.material.dispose()
           object.material = new MeshStandardMaterial({
             color: "white",
-            roughness: 0.9,
+            roughness: 1,
             metalness: 0.5
           })
         })

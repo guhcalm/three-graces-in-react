@@ -1,47 +1,12 @@
 import { useEffect, useState } from "react"
 import { Canvas, useFrame } from "@react-three/fiber"
-import { Vector3 } from "three"
-import { useCustomContext, useSetupScene } from "../../hooks"
-import { BridgeProvider, useBridgeContext } from "../../context"
-
-const Graces = {
-  Aglaea: {
-    lookAt: new Vector3(
-      -1.45568164297599,
-      1.0444831403047026,
-      -1.7386373643011563
-    ),
-    camera: new Vector3(
-      1.8248980868051587,
-      1.8617581461110024,
-      -0.8331771490330537
-    )
-  },
-  Thalia: {
-    lookAt: new Vector3(
-      -0.948630257329178,
-      1.2144656583626912,
-      -2.3645079129428073
-    ),
-    camera: new Vector3(
-      -1.1302020853724541,
-      1.231926905264657,
-      1.6313307695014245
-    )
-  },
-  Euphere: {
-    lookAt: new Vector3(
-      1.463857397681405,
-      0.7472196560156306,
-      -2.899828167305814
-    ),
-    camera: new Vector3(
-      -1.8748439328218733,
-      0.3370746332716125,
-      -0.735375699356021
-    )
-  }
-}
+import { Fog, Vector3 } from "three"
+import {
+  BridgeProvider,
+  useBridgeContext,
+  useLoadtGracesContext
+} from "../../context"
+import { Graces } from "./Graces"
 
 const Model = () => {
   const { state } = useBridgeContext()
@@ -63,9 +28,9 @@ const Model = () => {
     })
   )
   return (
-    <>
+    <group>
       <group scale={1.5}>
-        <primitive object={model.clone()} name="model" />
+        <primitive object={model} name="model" />
       </group>
       <pointLight
         args={["white", 2, 30, 30]}
@@ -73,19 +38,29 @@ const Model = () => {
         castShadow
       />
       <pointLight position={[-5, 0, 1]} decay={20} castShadow />
-    </>
+    </group>
   )
 }
 
-const Scene = () => {
-  useSetupScene()
-  return <Model />
-}
-
 export default () => (
-  <Canvas gl={{ antialias: true, powerPreference: "high-performance" }}>
-    <BridgeProvider value={useCustomContext()}>
-      <Scene />
+  <Canvas
+    gl={{
+      antialias: false,
+      powerPreference: "high-performance",
+      stencil: false,
+      alpha: true
+    }}
+    onCreated={({ camera, gl, scene }) => {
+      camera.position.set(0, 0, 5)
+      camera.lookAt(0, 0, 0)
+      camera.near = 0.1
+      camera.far = 15
+      gl.setPixelRatio(Math.min(devicePixelRatio, 2) * 0.9)
+      scene.fog = new Fog("black", 0, 15)
+    }}
+  >
+    <BridgeProvider value={useLoadtGracesContext()}>
+      <Model />
     </BridgeProvider>
   </Canvas>
 )

@@ -17,12 +17,16 @@ export const actions = {
   setGrace: (payload: string) => ({ type: "SET_GRACE", payload })
 }
 
-export const LoadGracesContext = createContext<any>(null)
-export const LoadGracesProvider = ({ children }: { children: ReactNode }) => (
-  <LoadGracesContext.Provider value={useReducer(reducer, initialState)}>
-    {children}
-  </LoadGracesContext.Provider>
-)
+const LoadGracesContext = createContext<any>(null)
+export const useLoadtGracesContext = () => useContext(LoadGracesContext)
+export const LoadGracesProvider = ({ children }: { children: ReactNode }) => {
+  const [state, dispatch] = useReducer(reducer, initialState)
+  return (
+    <LoadGracesContext.Provider value={{ state, dispatch, actions }}>
+      {children}
+    </LoadGracesContext.Provider>
+  )
+}
 
 const BridgeContext = createContext<any>(null)
 export const useBridgeContext = () => useContext(BridgeContext)
